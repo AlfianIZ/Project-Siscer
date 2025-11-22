@@ -31,7 +31,6 @@ df_clean["smoking_history"] = df_clean["smoking_history"].map({
 })
 
 # 3. FUZZY LABELING (Risk Low, Medium, High)
-
 def fuzzy_risk_label(row):
     bmi = row["bmi"]
     age = row["age"]
@@ -64,3 +63,15 @@ print(y_test.value_counts())
 
 print("\n=== 5 DATA AWAL DENGAN LABEL ===")
 print(df_clean[["bmi", "age", "blood_glucose_level", "risk_label"]].head())
+
+# 5. SIMPAN DATASET HASIL CLEANING + LABELING KE CSV
+df_clean.to_csv("diabetes_cleaned_with_label.csv", index=False)
+print("\nFile 'diabetes_cleaned_with_label.csv' berhasil dibuat!")
+
+# 6. SIMPAN DATA HASIL SPLITTING KE CSV
+X_train.to_csv("X_train.csv", index=False)
+X_test.to_csv("X_test.csv", index=False)
+y_train.to_csv("y_train.csv", index=False)
+y_test.to_csv("y_test.csv", index=False)
+
+print("File splitting (X_train, X_test, y_train, y_test) berhasil dibuat!")
