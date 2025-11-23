@@ -10,7 +10,7 @@ BMI : Indeks Massa Tubuh seseorang.
 age : umur seseorang.
 
 # NOTE
-Jika mau menjalankan kedua program tersebut, pastikan sudah menginstal Pandas dan Scikit-learn. Jika belum maka harus menginstalnya terlebih dahulu. dengan menjalankan perintah berikut pada terminal atau cmd :
+Jika mau menjalankan program-program tersebut, pastikan sudah menginstal Pandas dan Scikit-learn. Jika belum maka harus menginstalnya terlebih dahulu. dengan menjalankan perintah berikut pada terminal atau cmd :
 
 ```bash
 pip install pandas
