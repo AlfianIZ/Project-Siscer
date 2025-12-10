@@ -1,5 +1,5 @@
 # Deskripsi
-Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. Main program kita menggunakan diabetes_prdiction_fis.py.
+Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. Main program kita menggunakan diabetes_prdiction_fis.py yang berada pada folder kodePerbaikan.
 ## Deskripsi dataset
 Dataset dapat diakses di : [kaggle | Diabetes prediction dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data). 
 
