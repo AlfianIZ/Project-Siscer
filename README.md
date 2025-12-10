@@ -1,5 +1,5 @@
 # Deskripsi
-Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. 
+Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. Main program kita menggunakan diabetes_prdiction_fis.py.
 ## Deskripsi dataset
 Dataset dapat diakses di : [kaggle | Diabetes prediction dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data). 
 
@@ -8,7 +8,7 @@ BMI : Indeks Massa Tubuh seseorang.
 
 age : umur seseorang.
 
-# NOTE
+## NOTE
 Jika mau menjalankan program-program tersebut, pastikan sudah menginstal Pandas, Scikit-learn, scikit-fuzzy, . Jika belum maka harus menginstalnya terlebih dahulu. dengan menjalankan perintah berikut pada terminal atau cmd :
 
 ```bash
@@ -21,7 +21,9 @@ pip install scikit-learn
 pip install scikit-fuzzy
 ```
 
-# Output 
+# #Sebelum Diperbaiki
+
+## Output 
 Output dari cleaning.py :
 
 ```bash
@@ -88,3 +90,65 @@ Name: count, dtype: int64
 3  23.45  36.0                  155       High
 4  20.14  76.0                  155       High
 ```
+
+# #Setelah Diperbaiki
+
+## Output 
+Output dari diabetes_prdiction_fis.py:
+
+```
+Mencoba memuat data bersih...
+Berhasil! Memproses SELURUH DATA (96128 baris) dengan Fuzzy Logic...
+Mohon tunggu, proses ini mungkin memakan waktu agak lama...
+Sedang memproses baris ke-5000...
+Sedang memproses baris ke-10000...
+Sedang memproses baris ke-15000...
+Sedang memproses baris ke-20000...
+Sedang memproses baris ke-25000...
+Sedang memproses baris ke-30000...
+Sedang memproses baris ke-35000...
+Sedang memproses baris ke-40000...
+Sedang memproses baris ke-45000...
+Sedang memproses baris ke-50000...
+Sedang memproses baris ke-55000...
+Sedang memproses baris ke-60000...
+Sedang memproses baris ke-65000...
+Sedang memproses baris ke-70000...
+Sedang memproses baris ke-75000...
+Sedang memproses baris ke-80000...
+Sedang memproses baris ke-85000...
+Sedang memproses baris ke-90000...
+Sedang memproses baris ke-95000...
+Proses Fuzzy selesai!
+
+========================================
+ AKURASI SISTEM (TOTAL): 78.65%
+========================================
+Menampilkan grafik distribusi...
+```
+<img width="1001" height="675" alt="image" src="https://github.com/user-attachments/assets/85407286-de96-4aca-b721-6182044ab7fa" />
+
+```
+--- MODE INPUT MANUAL ---
+
+Tes diagnosa pasien? (y/n): y
+BMI : 24
+Umur: 20
+Gula: 135
+
+>>> HASIL: Sedang (Skor: 50.00)
+Menampilkan grafik keanggotaan...
+```
+
+<img width="1002" height="873" alt="image" src="https://github.com/user-attachments/assets/a627a48d-4c6a-4a17-9928-b3367f93ac0e" />
+
+```
+
+Tes diagnosa pasien? (y/n): n
+```
+
+
+
+
+
+
