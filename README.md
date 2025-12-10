@@ -1,5 +1,5 @@
 # Deskripsi
-Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. Main program kita menggunakan diabetes_prdiction_fis.py yang berada pada folder kodePerbaikan.
+Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. Main program kita menggunakan diabetes_prdiction_fis.py yang berada pada folder kodePerbaikan, pada folder tersebut berisi dataset yang sudah di cleaning, kode cleaning yang diperbaiki dan main program.
 ## Deskripsi dataset
 Dataset dapat diakses di : [kaggle | Diabetes prediction dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data). 
 
@@ -149,8 +149,24 @@ Menampilkan grafik keanggotaan...
 Tes diagnosa pasien? (y/n): n
 ```
 
+------
 
+Output dari cleaning.py yang diperbaiki :
+```
+=== MULAI PROSES CLEANING & LABELING ===
+Data awal dimuat: 100000 baris
+Sedang membuat label baru...
 
-
-
-
+========================================
+ SUKSES! 
+========================================
+File bersih tersimpan sebagai: 'diabetes_cleaned.csv'
+Total Data Bersih: 96128
+Distribusi Label:
+Label_Baru
+Rendah    39013
+Sedang    32008
+Tinggi    25107
+Name: count, dtype: int64
+```
+cleaning.py juga menghasilkan output dataset yang sudah dicleaning yaitu diabetes_cleaned.csv, file tersebut ada pada folder kodePerbaikan.
