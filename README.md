@@ -1,10 +1,9 @@
 # Deskripsi
-Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut.
+Disini ada dua source code, pada ver_2.py Jika ada kategori yang tidak terpetakan program akan menampilkan warning, pada cleaning.py tidak ada penanganan untuk hal tersebut. 
 ## Deskripsi dataset
 Dataset dapat diakses di : [kaggle | Diabetes prediction dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset/data). 
 
-Gula : Gula disini yang dibuat untuk aturan adalah gula darah puasa (diambil setelah tidak makan  semalaman) atau setelah bangun tidur pada pagi hari.
-
+Gula : Gula darah
 BMI : Indeks Massa Tubuh seseorang.
 
 age : umur seseorang.
