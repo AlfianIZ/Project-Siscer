@@ -61,11 +61,14 @@ def prediksi_fuzzy(bmi, umur, gula):
         diabetes_sim.compute()
         skor = diabetes_sim.output['Risiko Diabetes']
         
-        if skor <= 45: return "Rendah"
-        elif skor <= 65: return "Sedang"
-        else: return "Tinggi"
+        if skor <= 45: kat = "Rendah"
+        elif skor <= 65: kat = "Sedang"
+        else: kat = "Tinggi"
+        
+        # Return DUA nilai: Skor (angka) dan Kategori (teks)
+        return skor, kat 
     except:
-        return "Error"
+        return 0, "Error"
 
 # ============================================================
 # 3. FUNGSI GRAFIK BATANG (BAR CHART)
@@ -115,6 +118,43 @@ def tampilkan_grafik_batang(df_hasil, acc):
     plt.show()
 
 # ============================================================
+# TAMBAHAN: FUNGSI GRAFIK MEMBERSHIP (KEANGGOTAAN)
+# ============================================================
+def tampilkan_grafik_membership(input_bmi, input_umur, input_gula, output_skor, label_output):
+    # Membuat 4 subplot (2x2)
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
+    fig.suptitle(f'Posisi Input Pasien (Hasil: {label_output})', fontsize=16, fontweight='bold', color='blue')
+
+    # Helper untuk menggambar plot
+    def plot_var(ax, var, val, title):
+        for label in var.terms:
+            ax.plot(var.universe, var[label].mf, label=label)
+        if val is not None:
+            # Garis putus-putus menunjukkan posisi input user
+            ax.axvline(val, color='k', linestyle='--', linewidth=2, label='Input')
+        ax.set_title(title)
+        ax.legend(loc='upper right', fontsize='small')
+        ax.grid(True, alpha=0.3)
+
+    # Plot Input
+    plot_var(ax1, BMI, input_bmi, 'BMI')
+    plot_var(ax2, umur, input_umur, 'Umur')
+    plot_var(ax3, kadar_gula_darah, input_gula, 'Gula Darah')
+
+    # Plot Output (Risiko)
+    for label in Diabetes.terms:
+        ax4.plot(Diabetes.universe, Diabetes[label].mf, label=label)
+    
+    # Garis Merah menunjukkan Skor Akhir
+    ax4.axvline(output_skor, color='red', linewidth=3, label='Skor Akhir')
+    ax4.set_title(f'Output Risiko (Skor: {output_skor:.2f})')
+    ax4.legend(loc='upper right', fontsize='small')
+    ax4.grid(True, alpha=0.3)
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
+
+# ============================================================
 # 4. MAIN PROGRAM
 # ============================================================
 
@@ -124,8 +164,7 @@ def main():
     try:
         print("Mencoba memuat data bersih...")
         df = pd.read_csv(nama_file_bersih)
-        
-        # --- PERUBAHAN DI SINI ---
+
         # Kita pakai df.copy() untuk mengambil SEMUA data
         print(f"Berhasil! Memproses SELURUH DATA ({len(df)} baris) dengan Fuzzy Logic...")
         print("Mohon tunggu, proses ini mungkin memakan waktu agak lama...")
@@ -134,13 +173,13 @@ def main():
         # -------------------------
         
         hasil = []
-        # Menggunakan enumerate agar bisa print progress setiap 5000 data
         for idx, row in df_run.iterrows():
             if idx % 5000 == 0 and idx > 0:
                 print(f"Sedang memproses baris ke-{idx}...")
-                
-            res = prediksi_fuzzy(row['bmi'], row['age'], row['blood_glucose_level'])
-            hasil.append(res)
+            
+            # Kita ambil skor dan kat, tapi yang dimasukkan ke list cuma 'kat'
+            skor_hasil, kat_hasil = prediksi_fuzzy(row['bmi'], row['age'], row['blood_glucose_level'])
+            hasil.append(kat_hasil)
             
         df_run['Fuzzy_Prediksi'] = hasil
         print("Proses Fuzzy selesai!")
@@ -154,18 +193,28 @@ def main():
         # TAMPILKAN GRAFIK BATANG
         print("Menampilkan grafik distribusi...")
         tampilkan_grafik_batang(df_run, acc)
-        
+
         # Input Manual
         print("\n--- MODE INPUT MANUAL ---")
         while True:
-            tanya = input("Tes diagnosa pasien? (y/n): ").lower()
+            tanya = input("\nTes diagnosa pasien? (y/n): ").lower()
             if tanya != 'y': break
             try:
                 b = float(input("BMI : "))
                 u = float(input("Umur: "))
                 g = float(input("Gula: "))
-                print(f">>> HASIL: {prediksi_fuzzy(b, u, g)}\n")
-            except:
+                
+                # 1. Panggil fungsi prediksi
+                skor_akhir, kategori_akhir = prediksi_fuzzy(b, u, g)
+                
+                # 2. Tampilkan Teks
+                print(f"\n>>> HASIL: {kategori_akhir} (Skor: {skor_akhir:.2f})")
+                
+                # 3. Tampilkan Grafik (TAMBAHAN BARU)
+                print("Menampilkan grafik keanggotaan...")
+                tampilkan_grafik_membership(b, u, g, skor_akhir, kategori_akhir)
+                
+            except ValueError:
                 print("Input harus angka.")
 
     except FileNotFoundError:
