@@ -129,6 +129,8 @@ Proses Fuzzy selesai!
 Menampilkan grafik distribusi...
 ```
 <img width="1001" height="675" alt="image" src="https://github.com/user-attachments/assets/85407286-de96-4aca-b721-6182044ab7fa" />
+<img width="936" height="715" alt="keanggotaan FIS" src="https://github.com/user-attachments/assets/2e66a687-1b05-435d-b549-84a70971a3ea" />
+
 
 ```
 --- MODE INPUT MANUAL ---
