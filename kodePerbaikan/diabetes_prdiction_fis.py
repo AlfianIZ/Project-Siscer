@@ -117,6 +117,30 @@ def tampilkan_grafik_batang(df_hasil, acc):
     plt.tight_layout()
     plt.show()
 
+
+def tampilkan_grafik_referensi():
+    # Membuat 4 subplot (2x2)
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
+    fig.suptitle('Kurva Keanggotaan Fuzzy', fontsize=16, fontweight='bold', color='darkgreen')
+
+    # Helper sederhana
+    def plot_base(ax, var, title):
+        for label in var.terms:
+            ax.plot(var.universe, var[label].mf, label=label, linewidth=2)
+        ax.set_title(title)
+        ax.legend(loc='upper right', fontsize='small')
+        ax.grid(True, alpha=0.3)
+
+    # Plot variabel
+    plot_base(ax1, BMI, 'Keanggotaan BMI')
+    plot_base(ax2, umur, 'Keanggotaan Umur')
+    plot_base(ax3, kadar_gula_darah, 'Keanggotaan Gula Darah')
+    plot_base(ax4, Diabetes, 'Keanggotaan Output Risiko')
+
+    print(">> Menampilkan Grafik Keanggotaan... (Tutup jendela grafik untuk lanjut)")
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
+
 # ============================================================
 # TAMBAHAN: FUNGSI GRAFIK MEMBERSHIP (KEANGGOTAAN)
 # ============================================================
@@ -164,25 +188,20 @@ def main():
     try:
         print("Mencoba memuat data bersih...")
         df = pd.read_csv(nama_file_bersih)
-
-        # Kita pakai df.copy() untuk mengambil SEMUA data
-        print(f"Berhasil! Memproses SELURUH DATA ({len(df)} baris) dengan Fuzzy Logic...")
-        print("Mohon tunggu, proses ini mungkin memakan waktu agak lama...")
+        print(f"Berhasil! Memproses SELURUH DATA ({len(df)} baris)...")
         
-        df_run = df.copy() 
-        # -------------------------
-        
+        # Proses CSV
+        df_run = df.copy()
         hasil = []
         for idx, row in df_run.iterrows():
             if idx % 5000 == 0 and idx > 0:
                 print(f"Sedang memproses baris ke-{idx}...")
             
-            # Kita ambil skor dan kat, tapi yang dimasukkan ke list cuma 'kat'
-            skor_hasil, kat_hasil = prediksi_fuzzy(row['bmi'], row['age'], row['blood_glucose_level'])
-            hasil.append(kat_hasil)
+            # Ambil kategori saja untuk perhitungan akurasi
+            _, kat = prediksi_fuzzy(row['bmi'], row['age'], row['blood_glucose_level'])
+            hasil.append(kat)
             
         df_run['Fuzzy_Prediksi'] = hasil
-        print("Proses Fuzzy selesai!")
         
         # Hitung Akurasi
         acc = accuracy_score(df_run['Label_Baru'], df_run['Fuzzy_Prediksi'])
@@ -190,12 +209,19 @@ def main():
         print(f" AKURASI SISTEM (TOTAL): {acc*100:.2f}%")
         print("="*40)
         
-        # TAMPILKAN GRAFIK BATANG
-        print("Menampilkan grafik distribusi...")
+        # 1. TAMPILKAN GRAFIK BATANG (AKURASI)
+        print("1. Menampilkan Grafik Distribusi Akurasi...")
         tampilkan_grafik_batang(df_run, acc)
-
-        # Input Manual
-        print("\n--- MODE INPUT MANUAL ---")
+        
+        # 2. TAMPILKAN GRAFIK REFERENSI (LANGSUNG SETELAH BATANG DITUTUP)
+        print("\n2. Menampilkan Grafik Referensi Fuzzy...")
+        tampilkan_grafik_referensi()
+        
+        # 3. MASUK MODE INPUT MANUAL
+        print("\n" + "="*40)
+        print(" MODE INPUT MANUAL ")
+        print("="*40)
+        
         while True:
             tanya = input("\nTes diagnosa pasien? (y/n): ").lower()
             if tanya != 'y': break
@@ -204,15 +230,14 @@ def main():
                 u = float(input("Umur: "))
                 g = float(input("Gula: "))
                 
-                # 1. Panggil fungsi prediksi
-                skor_akhir, kategori_akhir = prediksi_fuzzy(b, u, g)
+                # Prediksi
+                skor_akhir, kat_akhir = prediksi_fuzzy(b, u, g)
                 
-                # 2. Tampilkan Teks
-                print(f"\n>>> HASIL: {kategori_akhir} (Skor: {skor_akhir:.2f})")
+                print(f"\n>>> HASIL: {kat_akhir} (Skor: {skor_akhir:.2f})")
                 
-                # 3. Tampilkan Grafik (TAMBAHAN BARU)
-                print("Menampilkan grafik keanggotaan...")
-                tampilkan_grafik_membership(b, u, g, skor_akhir, kategori_akhir)
+                # 3. Tampilkan Grafik Hasil Individu
+                print("Menampilkan grafik posisi pasien...")
+                tampilkan_grafik_membership(b, u, g, skor_akhir, kat_akhir)
                 
             except ValueError:
                 print("Input harus angka.")
