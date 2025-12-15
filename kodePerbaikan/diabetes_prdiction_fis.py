@@ -217,34 +217,10 @@ def main():
         print("\n2. Menampilkan Grafik Referensi Fuzzy...")
         tampilkan_grafik_referensi()
         
-        # 3. MASUK MODE INPUT MANUAL
-        print("\n" + "="*40)
-        print(" MODE INPUT MANUAL ")
-        print("="*40)
-        
-        while True:
-            tanya = input("\nTes diagnosa pasien? (y/n): ").lower()
-            if tanya != 'y': break
-            try:
-                b = float(input("BMI : "))
-                u = float(input("Umur: "))
-                g = float(input("Gula: "))
-                
-                # Prediksi
-                skor_akhir, kat_akhir = prediksi_fuzzy(b, u, g)
-                
-                print(f"\n>>> HASIL: {kat_akhir} (Skor: {skor_akhir:.2f})")
-                
-                # 3. Tampilkan Grafik Hasil Individu
-                print("Menampilkan grafik posisi pasien...")
-                tampilkan_grafik_membership(b, u, g, skor_akhir, kat_akhir)
-                
-            except ValueError:
-                print("Input harus angka.")
-
     except FileNotFoundError:
         print(f"ERROR: File '{nama_file_bersih}' tidak ditemukan.")
         print("Harap jalankan kode 'cleaning_data.py' terlebih dahulu!")
 
 if __name__ == "__main__":
     main()
+
