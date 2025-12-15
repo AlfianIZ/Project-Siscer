@@ -5,10 +5,6 @@ from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 
-# ============================================================
-# 1. KONFIGURASI ENGINE FUZZY
-# ============================================================
-
 # Universe
 BMI = ctrl.Antecedent(np.arange(0, 101, 1), 'BMI')
 umur = ctrl.Antecedent(np.arange(0, 121, 1), 'Umur')
@@ -44,9 +40,6 @@ rule6 = ctrl.Rule(kadar_gula_darah['Rendah'] & BMI['Tinggi'] & (umur['Rendah'] |
 diabetes_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6])
 diabetes_sim = ctrl.ControlSystemSimulation(diabetes_ctrl)
 
-# ============================================================
-# 2. FUNGSI PREDIKSI
-# ============================================================
 
 def prediksi_fuzzy(bmi, umur, gula):
     try:
@@ -65,14 +58,9 @@ def prediksi_fuzzy(bmi, umur, gula):
         elif skor <= 65: kat = "Sedang"
         else: kat = "Tinggi"
         
-        # Return DUA nilai: Skor (angka) dan Kategori (teks)
         return skor, kat 
     except:
         return 0, "Error"
-
-# ============================================================
-# 3. FUNGSI GRAFIK BATANG (BAR CHART)
-# ============================================================
 
 def tampilkan_grafik_batang(df_hasil, acc):
     # Hitung jumlah per kategori
@@ -140,9 +128,6 @@ def tampilkan_grafik_referensi():
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
-# ============================================================
-# TAMBAHAN: FUNGSI GRAFIK MEMBERSHIP (KEANGGOTAAN)
-# ============================================================
 def tampilkan_grafik_membership(input_bmi, input_umur, input_gula, output_skor, label_output):
     # Membuat 4 subplot (2x2)
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
@@ -177,10 +162,6 @@ def tampilkan_grafik_membership(input_bmi, input_umur, input_gula, output_skor, 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
-# ============================================================
-# 4. MAIN PROGRAM
-# ============================================================
-
 def main():
     nama_file_bersih = "diabetes_cleaned.csv"
     
@@ -212,8 +193,8 @@ def main():
         print("1. Menampilkan Grafik Distribusi Akurasi...")
         tampilkan_grafik_batang(df_run, acc)
         
-        # 2. TAMPILKAN GRAFIK REFERENSI (LANGSUNG SETELAH BATANG DITUTUP)
-        print("\n2. Menampilkan Grafik Referensi Fuzzy...")
+        # 2. TAMPILKAN GRAFIK Keanggotaan
+        print("\n2. Menampilkan Grafik Keanggotaan Fuzzy...")
         tampilkan_grafik_referensi()
         
     except FileNotFoundError:
@@ -222,5 +203,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
