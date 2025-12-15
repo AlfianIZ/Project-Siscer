@@ -137,7 +137,6 @@ def tampilkan_grafik_referensi():
     plot_base(ax3, kadar_gula_darah, 'Keanggotaan Gula Darah')
     plot_base(ax4, Diabetes, 'Keanggotaan Output Risiko')
 
-    print(">> Menampilkan Grafik Keanggotaan... (Tutup jendela grafik untuk lanjut)")
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
@@ -223,4 +222,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
