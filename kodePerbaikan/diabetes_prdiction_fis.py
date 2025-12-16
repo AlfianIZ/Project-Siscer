@@ -36,7 +36,6 @@ rule4 = ctrl.Rule(kadar_gula_darah['Rendah'] & BMI['Tinggi'] & umur['Tinggi'], D
 rule5 = ctrl.Rule(kadar_gula_darah['Rendah'] & (BMI['Rendah'] | BMI['Sedang']), Diabetes['Rendah'])
 rule6 = ctrl.Rule(kadar_gula_darah['Rendah'] & BMI['Tinggi'] & (umur['Rendah'] | umur['Sedang']), Diabetes['Rendah'])
 
-# Build System
 diabetes_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6])
 diabetes_sim = ctrl.ControlSystemSimulation(diabetes_ctrl)
 
@@ -63,39 +62,33 @@ def prediksi_fuzzy(bmi, umur, gula):
         return 0, "Error"
 
 def tampilkan_grafik_batang(df_hasil, acc):
-    # Hitung jumlah per kategori
+
     kategori_order = ['Rendah', 'Sedang', 'Tinggi']
     
-    # Hitung hasil prediksi Fuzzy
     fuzzy_counts = df_hasil['Fuzzy_Prediksi'].value_counts().reindex(kategori_order, fill_value=0)
     
-    # Hitung label asli (Dataset)
     label_counts = df_hasil['Label_Baru'].value_counts().reindex(kategori_order, fill_value=0)
 
-    # Setup Plot
     x = np.arange(len(kategori_order))
-    width = 0.35  # Lebar batang
+    width = 0.35
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    
-    # Plot dua batang berdampingan
+
     rects1 = ax.bar(x - width/2, label_counts, width, label='Label Asli (Dataset)', color='gray', alpha=0.7)
     rects2 = ax.bar(x + width/2, fuzzy_counts, width, label='Prediksi Fuzzy', color=['green', 'orange', 'red'])
 
-    # Label dan Judul
     ax.set_ylabel('Jumlah Pasien')
     ax.set_title(f'Distribusi Hasil Diagnosa (Akurasi: {acc*100:.2f}%)')
     ax.set_xticks(x)
     ax.set_xticklabels(kategori_order)
     ax.legend()
 
-    # Fungsi untuk menampilkan angka di atas batang
     def autolabel(rects):
         for rect in rects:
             height = rect.get_height()
             ax.annotate(f'{height}',
                         xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3),  # 3 points vertical offset
+                        xytext=(0, 3), 
                         textcoords="offset points",
                         ha='center', va='bottom')
 
@@ -106,78 +99,39 @@ def tampilkan_grafik_batang(df_hasil, acc):
     plt.show()
 
 
-def tampilkan_grafik_referensi():
-    # Membuat 4 subplot (2x2)
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
-    fig.suptitle('Kurva Keanggotaan Fuzzy', fontsize=16, fontweight='bold', color='darkgreen')
+def tampilkan_grafik_keanggotaan():
+    def plot_window(variable, title, xlabel):
+        plt.figure(figsize=(8, 5))
+        for label in variable.terms:
+            plt.plot(variable.universe, variable[label].mf, label=label, linewidth=2)
+        
+        plt.title(title, fontsize=14, fontweight='bold', color='darkblue')
+        plt.xlabel(xlabel)
+        plt.ylabel('Derajat Keanggotaan (µ)')
+        plt.legend(loc='upper right')
+        plt.grid(True, alpha=0.3)
 
-    # Helper sederhana
-    def plot_base(ax, var, title):
-        for label in var.terms:
-            ax.plot(var.universe, var[label].mf, label=label, linewidth=2)
-        ax.set_title(title)
-        ax.legend(loc='upper right', fontsize='small')
-        ax.grid(True, alpha=0.3)
+    plot_window(Diabetes, 'Fungsi Keanggotaan Output Risiko', 'Skor Risiko (0-100)')
+    plot_window(kadar_gula_darah, 'Fungsi Keanggotaan Gula Darah', 'Gula Darah (mg/dL)')
+    plot_window(umur, 'Fungsi Keanggotaan Umur', 'Umur (Tahun)')
+    plot_window(BMI, 'Fungsi Keanggotaan BMI', 'Nilai BMI')
 
-    # Plot variabel
-    plot_base(ax1, BMI, 'Keanggotaan BMI')
-    plot_base(ax2, umur, 'Keanggotaan Umur')
-    plot_base(ax3, kadar_gula_darah, 'Keanggotaan Gula Darah')
-    plot_base(ax4, Diabetes, 'Keanggotaan Output Risiko')
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.show()
-
-def tampilkan_grafik_membership(input_bmi, input_umur, input_gula, output_skor, label_output):
-    # Membuat 4 subplot (2x2)
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(10, 8))
-    fig.suptitle(f'Posisi Input Pasien (Hasil: {label_output})', fontsize=16, fontweight='bold', color='blue')
-
-    # Helper untuk menggambar plot
-    def plot_var(ax, var, val, title):
-        for label in var.terms:
-            ax.plot(var.universe, var[label].mf, label=label)
-        if val is not None:
-            # Garis putus-putus menunjukkan posisi input user
-            ax.axvline(val, color='k', linestyle='--', linewidth=2, label='Input')
-        ax.set_title(title)
-        ax.legend(loc='upper right', fontsize='small')
-        ax.grid(True, alpha=0.3)
-
-    # Plot Input
-    plot_var(ax1, BMI, input_bmi, 'BMI')
-    plot_var(ax2, umur, input_umur, 'Umur')
-    plot_var(ax3, kadar_gula_darah, input_gula, 'Gula Darah')
-
-    # Plot Output (Risiko)
-    for label in Diabetes.terms:
-        ax4.plot(Diabetes.universe, Diabetes[label].mf, label=label)
-    
-    # Garis Merah menunjukkan Skor Akhir
-    ax4.axvline(output_skor, color='red', linewidth=3, label='Skor Akhir')
-    ax4.set_title(f'Output Risiko (Skor: {output_skor:.2f})')
-    ax4.legend(loc='upper right', fontsize='small')
-    ax4.grid(True, alpha=0.3)
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
 def main():
     nama_file_bersih = "diabetes_cleaned.csv"
     
     try:
-        print("Mencoba memuat data bersih...")
+        print("Memuat data...")
         df = pd.read_csv(nama_file_bersih)
         print(f"Berhasil! Memproses SELURUH DATA ({len(df)} baris)...")
-        
-        # Proses CSV
+
         df_run = df.copy()
         hasil = []
         for idx, row in df_run.iterrows():
             if idx % 5000 == 0 and idx > 0:
                 print(f"Sedang memproses baris ke-{idx}...")
-            
-            # Ambil kategori saja untuk perhitungan akurasi
+
             _, kat = prediksi_fuzzy(row['bmi'], row['age'], row['blood_glucose_level'])
             hasil.append(kat)
             
@@ -189,13 +143,13 @@ def main():
         print(f" AKURASI SISTEM (TOTAL): {acc*100:.2f}%")
         print("="*40)
         
-        # 1. TAMPILKAN GRAFIK BATANG (AKURASI)
-        print("1. Menampilkan Grafik Distribusi Akurasi...")
+        # GRAFIK BATANG 
+        print("Menampilkan Grafik Distribusi Akurasi...")
         tampilkan_grafik_batang(df_run, acc)
         
-        # 2. TAMPILKAN GRAFIK Keanggotaan
-        print("\n2. Menampilkan Grafik Keanggotaan Fuzzy...")
-        tampilkan_grafik_referensi()
+        # GRAFIK KEANGGOTAAN
+        print("\nMenampilkan Grafik Keanggotaan Fuzzy...")
+        tampilkan_grafik_keanggotaan()
         
     except FileNotFoundError:
         print(f"ERROR: File '{nama_file_bersih}' tidak ditemukan.")
@@ -203,6 +157,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
