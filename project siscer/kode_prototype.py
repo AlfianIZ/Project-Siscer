@@ -9,7 +9,7 @@ try:
     df = pd.read_csv(file_path)
 except FileNotFoundError:
     print("File CSV tidak ditemukan, pastikan nama file benar.")
-    # Dummy data jika file tidak ada, agar program tidak crash saat setup
+    # Dummy data jika file tidak ada
     df = pd.DataFrame({'bmi': [20, 30], 'age': [20, 60], 'blood_glucose_level': [80, 200]})
 
 # Range Universe
@@ -48,7 +48,6 @@ rule12 = ctrl.Rule(kadar_gula_darah['Rendah'] & umur['Tinggi'] & BMI['Rendah'], 
 rule13 = ctrl.Rule(kadar_gula_darah['Tinggi'] & umur['Rendah'], Diabetes['Sedang'])
 rule14 = ctrl.Rule(kadar_gula_darah['Sedang'] & BMI['Rendah'] & umur['Rendah'], Diabetes['Rendah'])
 
-# Control System
 diabetes_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13, rule14])
 diabetes_sim = ctrl.ControlSystemSimulation(diabetes_ctrl)
 
@@ -64,7 +63,6 @@ def kategorisasi_risiko(skor):
 def prediksi_single(input_bmi, input_umur, input_gula):
     """Fungsi untuk memprediksi satu data individu."""
     try:
-        # Clipping data agar aman
         b = np.clip(input_bmi, BMI_min, BMI_max)
         u = np.clip(input_umur, umur_min, umur_max)
         g = np.clip(input_gula, kadar_gula_darah_min, kadar_gula_darah_max)
@@ -81,7 +79,6 @@ def prediksi_single(input_bmi, input_umur, input_gula):
         return 0, "Error/Tidak Ada Rule Cocok"
 
 print("Sedang memproses data dari CSV...")
-# Batasi 100 data dulu agar cepat untuk testing
 df_run = df.head(100).copy() 
 
 hasil_skor_list = []
@@ -106,4 +103,5 @@ plt.bar(counts.index, counts.values, color=[colors.get(x, 'blue') for x in count
 plt.title('Distribusi Risiko Diabetes (Dari Data CSV)')
 plt.xlabel('Kategori Risiko')
 plt.ylabel('Jumlah Orang')
+
 plt.show()
