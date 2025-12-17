@@ -137,6 +137,19 @@ def main():
             
         df_run['Fuzzy_Prediksi'] = hasil
         
+        print("Proses Fuzzy selesai!")
+        
+        print(" HASIL PREDIKSI 10 DATA PERTAMA")
+        
+        kolom_tampil = ['bmi', 'age', 'blood_glucose_level', 'Label_Baru', 'Fuzzy_Prediksi']
+        df_tampil = df_run[kolom_tampil].head(10)
+        df_tampil['Status'] = df_tampil.apply(
+            lambda x: 'Benar' if x['Label_Baru'] == x['Fuzzy_Prediksi'] else 'Salah', 
+            axis=1
+        )
+        df_tampil.columns = ['BMI', 'Umur', 'Gula Darah', 'Label Asli', 'Prediksi Fuzzy', 'Status']
+        print(df_tampil.to_string(index=True))
+        
         # Hitung Akurasi
         acc = accuracy_score(df_run['Label_Baru'], df_run['Fuzzy_Prediksi'])
         print("\n" + "="*40)
@@ -157,3 +170,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
