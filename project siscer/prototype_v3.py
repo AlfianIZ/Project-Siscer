@@ -4,17 +4,13 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
 
-# ==========================================
-# 1. KONFIGURASI FUZZY LOGIC (ENGINE)
-# ==========================================
-
-# --- A. Universe (Rentang Data) ---
+# Universe (Rentang Data) 
 BMI = ctrl.Antecedent(np.arange(0, 101, 1), 'BMI')
 umur = ctrl.Antecedent(np.arange(0, 121, 1), 'Umur')
 kadar_gula_darah = ctrl.Antecedent(np.arange(0, 601, 1), 'Gula Darah')
 Diabetes = ctrl.Consequent(np.arange(0, 101, 1), 'Risiko Diabetes')
 
-# --- B. Membership Functions ---
+# Membership Functions
 # BMI
 BMI['Rendah'] = fuzz.trapmf(BMI.universe, [0, 0, 18.5, 24])
 BMI['Sedang'] = fuzz.trimf(BMI.universe, [22, 27, 32])
@@ -35,7 +31,7 @@ Diabetes['Rendah'] = fuzz.trimf(Diabetes.universe, [0, 0, 50])
 Diabetes['Sedang'] = fuzz.trimf(Diabetes.universe, [25, 50, 75])
 Diabetes['Tinggi'] = fuzz.trimf(Diabetes.universe, [50, 100, 100])
 
-# --- C. Rules ---
+# Rules
 rule1 = ctrl.Rule(kadar_gula_darah['Tinggi'], Diabetes['Tinggi'])
 rule2 = ctrl.Rule(kadar_gula_darah['Sedang'] & (BMI['Tinggi'] | umur['Tinggi']), Diabetes['Tinggi'])
 rule3 = ctrl.Rule(kadar_gula_darah['Sedang'] & (BMI['Sedang'] | BMI['Rendah']), Diabetes['Sedang'])
@@ -46,10 +42,6 @@ rule6 = ctrl.Rule(kadar_gula_darah['Rendah'] & BMI['Tinggi'] & (umur['Rendah'] |
 diabetes_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6])
 diabetes_sim = ctrl.ControlSystemSimulation(diabetes_ctrl)
 
-# ==========================================
-# 2. FUNGSI UTAMA (PREDIKSI & GRAFIK)
-# ==========================================
-
 def kategorisasi_risiko(skor):
     if skor <= 45: return "Rendah"
     elif skor <= 75: return "Sedang"
@@ -57,7 +49,6 @@ def kategorisasi_risiko(skor):
 
 def prediksi_aman(input_bmi, input_umur, input_gula):
     try:
-        # Clipping data (Safety)
         b = np.clip(float(input_bmi), 0, 100)
         u = np.clip(float(input_umur), 0, 120)
         g = np.clip(float(input_gula), 0, 600)
@@ -100,10 +91,6 @@ def tampilkan_grafik_detail(input_bmi, input_umur, input_gula, output_skor, outp
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
-# ==========================================
-# 3. BAGIAN 1: PROSES DATA CSV (BATCH)
-# ==========================================
-
 def proses_batch_csv():
     print("\n" + "="*50)
     print(" BAGIAN 1: PEMROSESAN DATA DARI CSV ")
@@ -112,7 +99,6 @@ def proses_batch_csv():
     file_path = "diabetes_cleaned_with_label.csv"
     try:
         df = pd.read_csv(file_path)
-        # Bersihkan data: Konversi ke numeric dan hapus NaN
         for col in ['bmi', 'age', 'blood_glucose_level']:
             df[col] = pd.to_numeric(df[col], errors='coerce')
         
@@ -151,10 +137,6 @@ def proses_batch_csv():
     except Exception as e:
         print(f"Terjadi kesalahan saat memproses CSV: {e}")
 
-# ==========================================
-# 4. BAGIAN 2: INPUT MANUAL (INTERAKTIF)
-# ==========================================
-
 def proses_interaktif():
     print("\n" + "="*50)
     print(" BAGIAN 2: DIAGNOSA MANUAL (INPUT USER) ")
@@ -183,16 +165,12 @@ def proses_interaktif():
         except ValueError:
             print("Input tidak valid. Harap masukkan angka.")
 
-# ==========================================
-# MAIN EXECUTION
-# ==========================================
 if __name__ == "__main__":
-    # Jalankan Bagian 1 (CSV)
     proses_batch_csv()
-    
-    # Lanjut ke Bagian 2 (Manual)
+
     tanya = input("\nApakah Anda ingin lanjut ke Input Manual? (y/n): ").lower()
     if tanya == 'y':
         proses_interaktif()
     
+
     print("\nProgram Selesai.")
