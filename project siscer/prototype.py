@@ -28,25 +28,6 @@ umur.automf(3,names=['Rendah','Sedang','Tinggi'])
 kadar_gula_darah.automf(3,names=['Rendah','Sedang','Tinggi'])
 Diabetes.automf(3,names=['Rendah','Sedang','Tinggi'])
 
-
-'''
-BMI['Normal'] = fuzz.trapmf(BMI.universe,[])
-BMI['Overweight'] = fuzz.trapmf(BMI.universe,[pd.read_csv('diabetes_prediction_dataset.csv')])
-BMI['Obesitas'] = fuzz.trapmf(BMI.universe,[pd.read_csv('diabetes_prediction_dataset.csv')])
-
-umur['Muda'] = fuzz.trapmf(umur.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-umur['Dewasa'] = fuzz.trapmf(umur.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-umur['Lansia'] = fuzz.trapmf(umur.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-
-kadar_gula_darah ['Normal'] = fuzz.trapmf(kadar_gula_darah.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-kadar_gula_darah ['Pra-diabetes'] = fuzz.trapmf(kadar_gula_darah.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-kadar_gula_darah ['Diabetes'] = fuzz.trapmf(kadar_gula_darah.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-
-diabetes['Rendah'] = fuzz.trapmf(diabetes.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-diabetes['Sedang'] = fuzz.trapmf(diabetes.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-diabetes['Tinggi'] = fuzz.trapmf(diabetes.universe, [pd.read_csv('diabetes_prediction_dataset.csv')])
-'''
-
 rule1 = ctrl.Rule(kadar_gula_darah['Rendah'] & BMI['Rendah'] & umur['Rendah'], Diabetes['Rendah'])
 rule2 = ctrl.Rule(kadar_gula_darah['Sedang'] & BMI['Rendah'] & umur['Rendah'], Diabetes['Sedang'])
 rule3 = ctrl.Rule(kadar_gula_darah['Sedang'] & BMI['Rendah'] & umur['Sedang'],Diabetes['Sedang'])
@@ -126,5 +107,6 @@ axes[1, 0].legend()
 axes[1, 0].grid(True, alpha=0.3)
 
 print(f"  - Prediksi gejala diabetes: {diabetes_sim.output['pred_diabetes']:.2f}")
+
 
 plt.show()
